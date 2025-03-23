@@ -7,6 +7,7 @@
     - name: update cache
       ansible.builtin.apt:
         update_cache: yes
+      become: yes
       tags: cache
 
     - name: install git
