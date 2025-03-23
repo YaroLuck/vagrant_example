@@ -1,0 +1,34 @@
+- hosts: server2
+  tasks:
+    - name: install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+      become: yes
+
+    - name: copy index.html
+      ansible.builtin.copy:
+        src: ../files/index.html
+        dest: /usr/share/nginx/html/index.html
+        owner: vagrant
+        group: vagrant
+        mode: '0644'
+      become: yes
+
+    - name: copy nginx.conf
+      ansible.builtin.copy:
+        src: ../files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+        owner: vagrant
+        group: vagrant
+        mode: '0644'
+      notify:
+        - restart nginx
+      become: yes
+
+  handlers:
+    - name: restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      become: yes
