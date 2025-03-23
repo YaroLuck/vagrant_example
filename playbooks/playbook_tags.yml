@@ -1,0 +1,36 @@
+# 1. Обновление кеша пакетного менеджера
+# 2. Установка рабочих приложений и пакетов (например Git, Make, Nodejs)
+# 3. Создание нескольких пользователей (arya, sansa, tirion)
+
+- hosts: server2
+  tasks:
+    - name: update cache
+      ansible.builtin.apt:
+        update_cache: yes
+      tags: cache
+
+    - name: install git
+      ansible.builtin.apt:
+        name: git
+        state: latest
+      tags: install
+
+    - name: install node.js
+      ansible.builtin.apt:
+        name: nodejs
+      tags: install
+
+    - name: create user arya
+      ansible.builtin.user:
+        name: arya
+      tags: [new_user, atya]
+
+    - name: create user sansa
+      ansible.builtin.user:
+        name: sansa
+      tags: [new_user, sansa]
+
+    - name: create user tirion
+      ansible.builtin.user:
+        name: tirion
+      tags: [new_user, tirion]
