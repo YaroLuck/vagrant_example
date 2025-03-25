@@ -1,0 +1,39 @@
+- hosts: server1
+  gather_facts: no
+  vars:
+    users:
+      - jaime
+      - sansa
+      - robert
+  tasks:
+
+    - name: create users
+      ansible.builtin.user:
+        name: "{{ item }}"
+      loop: "{{ users }}"
+      become: yes
+
+    - name: create git configs
+      ansible.builtin.template:
+        src: ../files/.gitconfig.j2
+        dest: "/home/{{ item }}/.gitconfig"
+      loop: "{{ users }}"
+      become: yes
+
+    - name: Ensure .ssh dir exists
+      ansible.builtin.file:
+        path: "/home/{{ item }}/.ssh"
+        state: directory
+        mode: '0700'
+        owner: "{{ item }}"
+        group: "{{ item }}"
+      loop: "{{ users }}"
+      become: yes
+
+    - name: add public keys to auth keys
+      ansible.posix.authorized_key:
+        user: "{{ item }}"
+        state: present
+        key: "{{ lookup('file', '../files/{{ item }}.pub') }}"
+      loop: "{{ users }}"
+      become: yes

@@ -1,1 +1,8 @@
 .vagrant/
+*.pem
+*.key
+!*.pub
+/files/*.pub
+/files/jaime
+/files/robert
+/files/sansa
