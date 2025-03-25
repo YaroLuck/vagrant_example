@@ -1,0 +1,18 @@
+- hosts: server1
+  tasks:
+    - name: install git on server1
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: yes
+      become: yes
+
+- hosts: server2
+  gather_facts: no
+  tasks:
+    - name: install git on server2
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: yes
+      become: yes

@@ -1,0 +1,36 @@
+- hosts: servers
+  vars:
+    root_dir: /etc/nginx
+  tasks:
+    - name: install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+      become: yes
+
+    - name: copy index.html
+      ansible.builtin.template:
+        src: ../files/index_with_vars.html
+        dest: /usr/share/nginx/html/index.html
+        owner: vagrant
+        group: vagrant
+        mode: '0644'
+      become: yes
+
+    - name: update nginx.conf
+      ansible.builtin.template:
+        src: ../files/nginx_with_params.conf.j2
+        dest: "{{ root_dir }}/nginx.conf"
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - restart nginx
+      become: yes
+
+  handlers:
+    - name: restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+      become: yes
