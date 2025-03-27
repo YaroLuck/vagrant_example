@@ -1,0 +1,16 @@
+- hosts: servers
+  vars:
+    hello_text: 'This is server {{ inventory_hostname }}'
+  tasks:
+    - name: Print the gateway for each host when defined
+      ansible.builtin.debug:
+        msg: System {{ inventory_hostname }} has gateway {{ ansible_default_ipv4.gateway }}
+      when: ansible_default_ipv4.gateway is defined
+    - name: copy index.html
+      ansible.builtin.template:
+        src: ../files/index_with_filters.html
+        dest: /usr/share/nginx/html/index.html
+        owner: vagrant
+        group: vagrant
+        mode: '0644'
+      become: yes
