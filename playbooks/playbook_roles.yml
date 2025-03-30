@@ -1,0 +1,6 @@
+- hosts: server1
+  become: yes
+  tasks:
+    - name: install git via role
+      import_role:
+        name: geerlingguy.git
