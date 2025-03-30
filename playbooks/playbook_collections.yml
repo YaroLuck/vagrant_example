@@ -1,0 +1,27 @@
+- hosts: server2
+  become: yes
+  vars:
+    developer_pub_key: "{{ lookup('file', '../files/developer/developer.pub') }}" # путь к публичному ssh ключу
+  tasks:
+    - name: ensure user exists
+      ansible.builtin.user:
+        name: developer
+        state: present
+        create_home: yes
+      tags: user
+
+    - name: ensure .ssh dir exists
+      ansible.builtin.file:
+        path: /home/developer/.ssh
+        state: directory
+        mode: '0700'
+        owner: developer
+        group: developer
+      tags: ssh_keys
+
+    - name: add pub key to authoried_keys
+      ansible.posix.authorized_key:
+        user: developer
+        state: present
+        key: "{{ developer_pub_key }}"
+      tags: ssh_keys

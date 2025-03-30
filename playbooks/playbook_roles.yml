@@ -1,5 +1,7 @@
-- hosts: server1
+- hosts: all
   become: yes
+  roles:
+    - role: ../roles/setup_user_environment
   tasks:
     - name: install git via role
       import_role:
