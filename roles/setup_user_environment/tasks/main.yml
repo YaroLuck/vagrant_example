@@ -1,0 +1,19 @@
+---
+# tasks file for setup_user_environment
+
+- name: create user and pwd
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    password: "{{ user_password | password_hash('sha512')}}"
+    create_home: yes
+  become: yes
+
+- name: create git congig fo user
+  ansible.builtin.template:
+    src: templates/gitconfig.j2
+    dest: "/home/{{ user_name }}/.gitconfig"
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    mode: '0644'
+  become: yes
+

@@ -1,0 +1,8 @@
+---
+# defaults file for setup_user_environment
+
+user_name: "default_user"
+user_password: "default_password"
+
+git_user_name: "{{ user_name }}"
+git_user_email: "{{ user_name }}@example.com"
