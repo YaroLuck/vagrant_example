@@ -1,0 +1,27 @@
+- hosts: server2
+  tasks:
+    - name: install cowsay
+      ansible.builtin.apt:
+        name: cowsay
+        state: present
+      become: yes
+
+    - name: save cowsay result in param
+      ansible.builtin.command: cowsay "This is server {{ inventory_hostname }}"
+      register: cowsay_result
+
+    - ansible.builtin.debug:
+        var: cowsay_result
+
+    - name: copy index with cowsay stdout
+      ansible.builtin.template:
+        src: ../files/index_register.html
+        dest: /usr/share/nginx/html/index.html
+      become: yes
+
+    - name: reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      become: yes
+
