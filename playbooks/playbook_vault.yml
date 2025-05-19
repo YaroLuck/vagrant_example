@@ -1,0 +1,31 @@
+- hosts: server2
+  become: yes
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user to docker group
+      user:
+        name: vagrant
+        groups: docker
+        append: yes
+
+    - name: run docker container
+      community.docker.docker_container:
+        name: docker-vault-example
+        image: hexletcomponents/devops-example-app
+        ports:
+          - "3000:3000"
+        env:
+          SERVER_MESSAGE: "{{ SERVER_MESSAGE }}"
+          ROLLBAR_TOKEN: "{{ ROLLBAR_TOKEN }}"
+        restart_policy: "unless-stopped"
+      become: yes
